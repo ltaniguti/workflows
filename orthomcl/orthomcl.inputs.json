@@ -1,0 +1,10 @@
+{
+    "Orthomcl.proteomes": [
+        "gs://ephemeral-1/fastas/Sscitamineum_aa_V2.fasta",
+        "gs://ephemeral-1/fastas/another_species_aa.fasta"
+    ],
+    "Orthomcl.identifiers": [
+        "ssci",
+        "other"
+    ]
+}
