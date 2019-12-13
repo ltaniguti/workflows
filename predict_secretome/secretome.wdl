@@ -18,7 +18,7 @@ task SignalPeptide {
   }
 
   runtime {
-    docker: "zzzzzty/signalp:latest"
+    docker: "gcr.io/taniguti-backups/bio/signalp:latest"
     memory: "1 GB"
     cpu: "1"
     disks: "local-disk " + 10 + " HDD"
