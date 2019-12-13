@@ -14,11 +14,11 @@ task SignalPeptide {
   File proteins
 
   command {
-    signalp ${proteins} > signal.txt
+    signalp -fasta ${proteins} -org euk -prefix out
   }
 
   runtime {
-    docker: "signalp:latest"
+    docker: "zzzzzty/signalp:latest"
     memory: "1 GB"
     cpu: "1"
     disks: "local-disk " + 10 + " HDD"
@@ -26,7 +26,7 @@ task SignalPeptide {
   }
 
   output {
-    File signal = "signal.txt"
+    File signal = "out_summary.signalp5"
   }
 
 }
@@ -47,7 +47,7 @@ task TransmembraneDomain {
   }
 
   runtime {
-    docker: "signalp:latest"
+    docker: "taniguti/tmhmm:latest"
     memory: "1 GB"
     cpu: "1"
     disks: "local-disk " + 10 + " HDD"
@@ -69,7 +69,7 @@ task PrositeScan {
   }
 
   runtime {
-    docker: "psscan:latest"
+    docker: "taniguti/psscan:latest"
     memory: "1 GB"
     cpu: "1"
     disks: "local-disk " + 10 + " HDD"
@@ -106,8 +106,11 @@ task selectSecretome {
 
 
     def parse_signalp(items):
-        prot, __, __, __, __, __, __, __, __, signal, __, __ = items
-        return prot, signal
+        if items[1] != "OTHER":
+            ident = items[0]
+            signal = "Y"
+            return ident, signal
+        return items[0], "N"
 
     def parse_tmhmm(items):
         prot, __, tipo, start, end = items
@@ -191,7 +194,7 @@ task localize {
   }
 
   runtime {
-    docker: "localizer:latest"
+    docker: "taniguti/localizer:latest"
     memory: "1 GB"
     cpu: "1"
     disks: "local-disk " + 10 + " HDD"
@@ -211,7 +214,7 @@ task EffectorP {
   }
 
   runtime {
-    docker: "effector:latest"
+    docker: "taniguti/effectorp2:latest"
     memory: "1 GB"
     cpu: "1"
     disks: "local-disk " + 10 + " HDD"
@@ -236,7 +239,7 @@ task RunPhibase {
   }
 
   runtime {
-    docker: "gcr.io/esalq-carvao/orthomcl:v1"
+    docker: "taniguti/orthomcl:latest"
     memory: "8 GB"
     cpu: "4"
     disks: "local-disk " + 10 + " HDD"
